@@ -1,20 +1,21 @@
-FROM whyour/qinglong:latest
+# Use an official Node.js runtime as a parent image
+FROM node:20-alpine
 
+# Set the working directory
 WORKDIR /ql
 
-# 更新并安装必要的系统包
-RUN set -x && \
-    apk update && \
-    apk add --no-cache \
-    gcc musl-dev python3-dev libffi-dev openssl-dev g++ py-pip \
-    jpeg-dev pango-dev giflib-dev && \
-    pip install --no-cache-dir \
-    user-agent cache agent aiohttp jieba ping3 requests canvas && \
-    npm install -g \
-    ds moment cache index uuid axios js-base64 typescript require @types/node \
-    png-js global-agent json5 form-data fs jieba ts-md5 ws tslib tough-cookie \
-    date-fns dotenv prettytable crypto-js canvas jsdom hp
+# Install dependencies
+RUN set -x \
+    && apk update \
+    && apk add --no-cache gcc musl-dev python3-dev libffi-dev openssl-dev g++ py3-pip jpeg-dev pango-dev giflib-dev make \
+    && pip install --no-cache-dir user-agent cache agent aiohttp jieba ping3 requests canvas \
+    && npm install -g ds moment cache index uuid axios js-base64 typescript require @types/node png-js global-agent json5 form-data fs jieba ts-md5 ws tslib tough-cookie date-fns dotenv prettytable crypto-js canvas jsdom hp
 
-# 清理不必要的缓存和开发包
-RUN apk del gcc musl-dev python3-dev libffi-dev openssl-dev g++ && \
-    rm -rf /var/cache/apk/* /root/.npm /root/.cache
+# Copy the current directory contents into the container at /ql
+COPY . /ql
+
+# Make port 8080 available to the world outside this container
+EXPOSE 8080
+
+# Run the app when the container launches
+CMD ["node", "app.js"]
