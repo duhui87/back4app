@@ -1,16 +1,9 @@
-# 使用青龙面板的官方镜像
 FROM whyour/qinglong:latest
 
-# 设置工作目录
 WORKDIR /ql
 
-# 设置环境变量
-ENV NODE_ENV=production
-ENV QL_DB_TYPE=sqlite3  # 根据需要选择数据库类型
-# 其他必要的环境变量，可以根据实际情况添加
-
-# 暴露青龙面板使用的端口
-EXPOSE 5700
-
-# 启动青龙面板
-CMD ["start.sh"]
+RUN set -x \
+  && apk update \
+  && apk add gcc musl-dev python3-dev libffi libffi-dev openssl openssl-dev g++ py-pip mysql-dev linux-headers pixman build-base cairo-dev jpeg-dev pango-dev giflib-dev rust cargo alpine-sdk autoconf automake libtool \
+  && pip install user-agent cache agent aiohttp jieba ping3 requests canvas \
+  && npm install -g ds moment cache index uuid axios js-base64 typescript require @types/node png-js global-agent json5 form-data fs jieba ts-md5 ws tslib tough-cookie date-fns dotenv prettytable crypto-js canvas jsdom hp
